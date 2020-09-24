@@ -42,6 +42,7 @@ namespace Serenity.CodeGenerator
                 { "nchar", "String" },
                 { "ntext", "String" },
                 { "numeric", "Decimal" },
+                { "number", "Decimal" },
                 { "nvarchar", "String" },
                 { "nvarchar2", "String" },
                 { "real", "Single" },
@@ -60,7 +61,7 @@ namespace Serenity.CodeGenerator
                 { "varchar2", "String" }
             };
 
-        public static string SqlTypeNameToFieldType(string sqlTypeName, int size, out string dataType)
+        public static string SqlTypeNameToFieldType(string sqlTypeName, int size, int scale, out string dataType)
         {
             dataType = null;
             string fieldType;
@@ -79,8 +80,11 @@ namespace Serenity.CodeGenerator
                 dataType = "byte[]";
                 return "ByteArray";
             }
-            else if (SqlTypeToFieldTypeMap.TryGetValue(sqlTypeName, out fieldType))
+            else if (SqlTypeToFieldTypeMap.TryGetValue(sqlTypeName, out fieldType)) {
+                if (sqlTypeName == "number" && scale == 0)
+                    return "Int32";
                 return fieldType;
+            }
             else
                 return "Stream";
         }

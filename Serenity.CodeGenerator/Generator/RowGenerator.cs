@@ -84,7 +84,7 @@ namespace Serenity.CodeGenerator
                 flags = null;
 
             string dataType;
-            var fieldType = SchemaHelper.SqlTypeNameToFieldType(fieldInfo.DataType, fieldInfo.Size, out dataType);
+            var fieldType = SchemaHelper.SqlTypeNameToFieldType(fieldInfo.DataType, fieldInfo.Size, fieldInfo.Scale, out dataType);
             dataType = dataType ?? fieldType;
             return new EntityField
             {
