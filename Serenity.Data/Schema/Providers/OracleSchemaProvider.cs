@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Serenity.Data.Schema
@@ -118,10 +119,17 @@ namespace Serenity.Data.Schema
         /// <returns></returns>
         public IEnumerable<TableName> GetTableNames(IDbConnection connection)
         {
-            return connection.Query<TableName>(@"
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
+            var user = builder.UserID;
+            //return connection.Query<TableName>(@"
+            //    SELECT owner ""Schema"", table_name ""Table"" 
+            //    FROM all_tables
+            //    WHERE owner != 'SYS' 
+            //    ORDER BY owner, table_name");
+            return connection.Query<TableName>($@"
                 SELECT owner ""Schema"", table_name ""Table"" 
                 FROM all_tables
-                WHERE owner != 'SYS' 
+                WHERE owner = '{user}' 
                 ORDER BY owner, table_name");
         }
     }
